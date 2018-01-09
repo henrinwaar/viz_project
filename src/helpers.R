@@ -1,13 +1,36 @@
-giveTheListOfMasters <- function(university){
-  listOfMasters <- sqldf(paste("SELECT cleanData.field FROM cleanData JOIN universities ON cleanData.name = universities.name WHERE universities.name = '", university, "' GROUP BY cleanData.field", sep = ""));
-  if (count(listOfMasters) < 1){
-    listOfMasters = "No Master";
-  }
-  content = paste(sep = "<br/>",
-                  paste("There are", count(listOfMasters), "masters in this university !", sep = " "),
-                  for (element in as.list(listOfMasters)){
-                    paste(element,", ", sep = "")
-                  }
-  )
-  return(content)
+library(dplyr)
+library(sqldf)
+
+utf8decode <- function(string){
+  string = gsub("Ã©", "é", string)
+  string = gsub("Ãª", "ê", string)
+  string = gsub("Ã¨", "è", string)
+  string = gsub("Ã¶", "ö", string)
+  string = gsub("Ã«", "ë", string)
+  string = gsub("Ã§", "ç", string)
+  string = gsub("Ã¢", "â", string)
+  string = gsub("Ã´", "ô", string)
+  string = gsub("Ã®", "î", string)
+  string = gsub("Ã", "à", string)
+  string = gsub("_", " ", string)
 }
+
+
+
+
+
+
+
+
+
+
+#giveTheListOfMasters <- function(university){
+  #listOfMasters <- sqldf(paste("SELECT DISTINCT field FROM cleanData WHERE name = '", university, "'", sep = ""));
+  #tmp <-  "";
+  #for (element in listOfMasters){
+  #  tmp <- paste(tmp, "<br>- ", element);
+  #}
+  #content <- paste("There are ", universit, " masters in this university: ", tmp);
+  #return(content);
+#}
+

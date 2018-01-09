@@ -23,9 +23,7 @@ navbarPage("Insertion", id="nav",
 
         h2("Selection"),
 
-        selectInput("v_scale", label = "Choose scale", choices  = list("Academy", "University"), selected = "University"),
-        conditionalPanel("input.v_scale", selectInput("v_field", label = "Choose field of studies", choices  = cleanData$field)),
-        conditionalPanel("input.v_field",selectInput("v_criteria", label = "Choose a criteria for the ranking", choices  = list("Insertion rate", "Average income", "Quick managers", selected = "Insertion rate")))
+        selectInput("v_scale", label = "Choose scale you want:", choices  = list("Academy", "University"), selected = "University")
       )
     )
   ),
@@ -34,11 +32,11 @@ navbarPage("Insertion", id="nav",
     fluidRow(
       column(3,
              selectInput("d_scale", label = "Choose scale", choices  = list("Academy", "University"), selected = "University"),
-             selectInput("d_field", label = "Choose field of studies", choices  = cleanData$field),
+             selectInput("d_field", label = "Choose field of studies", choices  = utf8decode(cleanData$field)),
              selectInput("d_criteria", label = "Choose a criteria for the ranking", choices  = list("Insertion rate", "Average income", "Quick managers", selected = "Insertion rate"))
       ),
     hr(),
-    DT::dataTableOutput("table")
+    plotOutput("diagram")
     )
   )
 )
