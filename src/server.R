@@ -80,7 +80,7 @@ function(input, output) {
   tableIncAca <- data.frame(x = academiesRankedByInc$academy, y = academiesRankedByInc$income);
   tableIncAca$x <- factor(tableIncAca$x, levels = academiesRankedByInc$academy);
   
-  plotIncAca <- plot_ly(tableIncAca, x = ~x, y = ~y, type = 'bar', name = 'Academy') %>%
+  plotIncAca <- plot_ly(tableIncAca, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
     add_trace(y = academiesRankedByInc$incomeReg, name = 'Region', opacity = 0.5) %>%
     layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
   output$diagramIncAca <- renderPlotly(plotIncAca)

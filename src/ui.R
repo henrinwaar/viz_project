@@ -30,7 +30,7 @@ navbarPage("Insertion", id="nav",
                     fluidRow(
                       column(3,
                              selectInput("d_scale", label = "Choose scale", choices  = list("Academy", "University"), selected = "University"),
-                             selectInput("d_criteria", label = "Choose a criteria for the ranking", choices  = list("Insertion rate", "Average income", "Quick managers", selected = "Insertion rate"))
+                             selectInput("d_criteria", label = "Choose a criteria for the ranking", choices  = list("Average income", "Insertion rate", "Quick managers"), selected = "Average income")
                       )
                     ),
                     conditionalPanel(condition = "input.d_scale == 'University' & input.d_criteria == 'Insertion rate'",
@@ -71,10 +71,10 @@ navbarPage("Insertion", id="nav",
                     )
            ),
            
-           
-           tabPanel("Universities\' info",
-                    h1("tableau de données classiques avec fonction de recherche de l\'université afin de consulter
-                       la liste des masters disponibles + la note/grade attribuée avec un clustering (kmeans)")
-                    )
+           tabPanel("Universities' info",
+                    h1("tableau de donnees classiques avec fonction de recherche de l'universite afin 
+              de consulter la liste des masters disponibles + la note/grade attribuee avec clustering")
+           )
 )
+
 
