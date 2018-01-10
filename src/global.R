@@ -21,7 +21,7 @@ cleanData <- data %>%
     employExtReg = emplois_exterieurs_a_la_region_de_luniversite,
     Lat = Latitude,
     Long = Longitude
-)
+  )
 
 cleanData$name <- gsub( "'", "_", cleanData$name)
 

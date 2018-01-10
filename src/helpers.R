@@ -25,12 +25,12 @@ utf8decode <- function(string){
 
 
 #giveTheListOfMasters <- function(university){
-  #listOfMasters <- sqldf(paste("SELECT DISTINCT field FROM cleanData WHERE name = '", university, "'", sep = ""));
-  #tmp <-  "";
-  #for (element in listOfMasters){
-  #  tmp <- paste(tmp, "<br>- ", element);
-  #}
-  #content <- paste("There are ", universit, " masters in this university: ", tmp);
-  #return(content);
+#listOfMasters <- sqldf(paste("SELECT DISTINCT field FROM cleanData WHERE name = '", university, "'", sep = ""));
+#tmp <-  "";
+#for (element in listOfMasters){
+#  tmp <- paste(tmp, "<br>- ", element);
+#}
+#content <- paste("There are ", universit, " masters in this university: ", tmp);
+#return(content);
 #}
 
