@@ -5,6 +5,7 @@ library(lattice)
 library(dplyr)
 library(sqldf)
 library(htmltools)
+library(ggplot2)
 library(plotly)
 
 source("helpers.R")
@@ -40,10 +41,29 @@ function(input, output) {
     }
   })
   
-  output$diagram <- renderPlot({
-    # Render a barplot
-    vector  = universitiesRankedByInc$income - 22000
-    barplot(vector)
-  })
+  ## Diagram for income by university
+  tableInc <- data.frame(x = universitiesRankedByInc$name, y = universitiesRankedByInc$income);
+  tableInc$x <- factor(tableInc$x, levels = universitiesRankedByInc$name);
+  
+  plotIncUni <- plot_ly(tableInc, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
+    add_trace(y = universitiesRankedByInc$incomeReg, name = 'Region', opacity = 0.5) %>%
+    layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
+  output$diagramIncUni <- renderPlotly(plotIncUni)
+  
+  ## Diagram for managers by university
+  tableMana <- data.frame(x = universitiesRankedByManag$name, y = universitiesRankedByManag$managerNum);
+  tableMana$x <- factor(tableMana$x, levels = universitiesRankedByManag$name);
+  
+  plotManaUni <- plot_ly(tableMana, x = ~x, y = ~y, type = 'bar') %>%
+    layout(yaxis = list(title = 'Number of quick managers'), xaxis = list(title = ""))
+  output$diagramManaUni <- renderPlotly(plotManaUni)
+  
+  ## Diagram for insertion rate by university
+  tableIR <- data.frame(x = universitiesRankedByIR$name, y = universitiesRankedByIR$insertionRate);
+  tableIR$x <- factor(tableIR$x, levels = universitiesRankedByIR$name);
+  
+  plotIRUni <- plot_ly(tableIR, x = ~x, y = ~y, type = 'bar') %>%
+    layout(yaxis = list(title = 'Insertion rate (%)'), xaxis = list(title = ""))
+  output$diagramIRUni <- renderPlotly(plotIRUni)
   
 }

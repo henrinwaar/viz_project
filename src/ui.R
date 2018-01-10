@@ -1,5 +1,3 @@
-library(leaflet)
-
 # Choices for drop-downs
 
 navbarPage("Insertion", id="nav",
@@ -28,15 +26,31 @@ navbarPage("Insertion", id="nav",
     )
   ),
 
-  tabPanel("Data explorer",
+  tabPanel("Ranking",
     fluidRow(
       column(3,
              selectInput("d_scale", label = "Choose scale", choices  = list("Academy", "University"), selected = "University"),
-             selectInput("d_field", label = "Choose field of studies", choices  = utf8decode(cleanData$field)),
              selectInput("d_criteria", label = "Choose a criteria for the ranking", choices  = list("Insertion rate", "Average income", "Quick managers", selected = "Insertion rate"))
-      ),
-    hr(),
-    plotOutput("diagram")
+      )
+    ),
+    conditionalPanel(condition = "input.d_scale == 'University' & input.d_criteria == 'Insertion rate'",
+      fluidRow(
+        hr(),
+        plotlyOutput("diagramIRUni")
+      )
+    ),
+    conditionalPanel(condition = "input.d_scale == 'University' & input.d_criteria =='Average income'",
+      fluidRow(
+       hr(),
+       plotlyOutput("diagramIncUni")
+      )
+    ),
+    conditionalPanel(condition = "input.d_scale == 'University' & input.d_criteria =='Quick managers'",
+      fluidRow(
+        hr(),
+        plotlyOutput("diagramManaUni")
+      )
     )
   )
 )
+
