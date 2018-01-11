@@ -7,7 +7,6 @@ library(sqldf)
 library(htmltools)
 library(ggplot2)
 library(plotly)
-
 source("helpers.R")
 
 
@@ -33,14 +32,15 @@ function(input, output) {
         addTiles()%>% 
         addMarkers(lng = academies$Long, 
                    lat = academies$Lat, 
-                   label = utf8decode(academies$name), 
-                   popup = paste("Number of masters: ", academies$numberOfMasters, "<br>Number of students: ", academies$population, "<br>Percentage of women: ",  round((universities$womenNum/universities$population)*100,2), "<br>Average insertion rate: ", academies$insertionRate, "%<br>Average income: ", academies$income, " euros", sep = ""), 
+                   label = utf8decode(academies$academy), 
+                   popup = paste("Number of masters: ", academies$numberOfMasters, "<br>Number of students: ", academies$population, "<br>Percentage of women: ",  round((academies$womenNum/academies$population)*100,2), "<br>Average insertion rate: ", academies$insertionRate, "%<br>Average income: ", academies$income, " euros", sep = ""), 
                    options = markerOptions(riseOnHover = TRUE), 
                    clusterOptions = markerClusterOptions(spiderfyOnMaxZoom = FALSE)) %>%
         setView(lng = 2.9252801, lat = 47.3824086, zoom = 6) 
     }
   })
   
+  ## University ranking barplots ####
   ## Diagram for income by university
   tableIncUni <- data.frame(x = universitiesRankedByInc$name, y = universitiesRankedByInc$income);
   tableIncUni$x <- factor(tableIncUni$x, levels = universitiesRankedByInc$name);
@@ -75,7 +75,7 @@ function(input, output) {
     layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
   output$diagramIncUni <- renderPlotly(plotIncUni)
   
-  #####
+  ## Academy ranking barplots ####
   ## Diagram for income by academy
   tableIncAca <- data.frame(x = academiesRankedByInc$academy, y = academiesRankedByInc$income);
   tableIncAca$x <- factor(tableIncAca$x, levels = academiesRankedByInc$academy);
@@ -101,4 +101,47 @@ function(input, output) {
     layout(yaxis = list(title = 'Insertion rate (%)'), xaxis = list(title = ""))
   output$diagramIRAca <- renderPlotly(plotIRAca)
   
+  ## Clustering ####
+
+  # output$plot1 <- renderPlot({
+  #   palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
+  #             "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
+  #   plot(selectedData,
+  #        col = clusters$cluster,
+  #        pch = 20, cex = 3)
+  #   points(clusters$centers, pch = 4, cex = 4, lwd = 4)
+  # })
+  
+  plot2bis <- plot_ly(universities, x = ~income, y = ~insertionRate, text = ~name, color = ~grade, colors = c('#0037B9', '#B9000C', '#00B92B')) %>%
+    add_markers() %>%
+    layout(xaxis = list(title = 'Average Income'),
+           yaxis = list(title = 'Insertion Rate'),
+           title = "Universities grouped by grade"
+           )
+  output$plot2 <- renderPlotly(plot2bis)
+  
+  
+  ## Universities info ####
+  
+  output$grade <- renderText({
+    inputbis <- gsub(" ", "_", input$university)
+    df1 <- universities %>%
+      filter(
+        name == inputbis
+      )
+    
+    paste("The university of", input$university, " has ", df1$grade)
+  }) 
+  
+  output$recapTable2 <- DT::renderDataTable({
+    df2 <- cleanTable %>%
+      filter(
+        name == input$university
+      )
+    df2 <- sqldf::sqldf("SELECT Field, SUM(population) AS Population, SUM(womenNum) AS Women, AVG(insertionRate) AS InsertionRate, AVG(income) AS Income, AVG(scholarPer) AS PercentScholar, SUM(managerNum) AS QuickManagers FROM df2 GROUP BY field")
+    df2$InsertionRate <- paste(round(df2$InsertionRate, 2), "%", sep = "")
+    df2$Income <- paste(round(df2$Income), "euros", sep = " ")
+    df2$PercentScholar <- paste(round(df2$PercentScholar, 2), "%", sep = " ")
+    DT::datatable(df2, escape = FALSE)
+  })
 }

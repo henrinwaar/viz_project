@@ -1,3 +1,8 @@
+library(leaflet)
+library(plotly)
+source("helpers.R")
+
+
 # Choices for drop-downs
 
 navbarPage("Insertion", id="nav",
@@ -72,9 +77,33 @@ navbarPage("Insertion", id="nav",
            ),
            
            tabPanel("Universities' info",
-                    h1("tableau de donnees classiques avec fonction de recherche de l'universite afin 
-              de consulter la liste des masters disponibles + la note/grade attribuee avec clustering")
+                    fluidRow(
+                      plotlyOutput("plot2")
+                    ),
+                    fluidRow(
+                      hr(),
+                      column(6,
+                             selectInput("university", label = "Choose a university", choices  = utf8decode(universities$name), selected = utf8decode(universities$name[1]))
+                      ),
+                      column(6,
+                             br(),
+                             br(),
+                             textOutput("grade")
+                             )
+                    ),
+                    fluidRow(
+                          conditionalPanel(condition = "input.university",
+                            fluidRow(
+                              column(10,
+                                     h4("List of masters: "),
+                                     hr(),
+                                     DT::dataTableOutput("recapTable2")
+                              )
+                            )
+                          )
+                      )
+                    )
            )
-)
+
 
 
