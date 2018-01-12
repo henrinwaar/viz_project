@@ -130,8 +130,22 @@ function(input, output) {
         name == inputbis
       )
     
-    paste("The university of", input$university, " has ", df1$grade)
+    paste("The university of", input$university, " has ", df1$grade, ".")
   }) 
+  
+  output$recapTable1 <- renderTable({
+    df1 <- cleanTable %>%
+      filter(
+        name == input$university
+      )
+    df1 <- sqldf::sqldf("SELECT name, SUM(population) AS Population, SUM(womenNum) AS Women, AVG(insertionRate) AS InsertionRate, AVG(income) AS Income, AVG(scholarPer) AS PercentScholar, SUM(managerNum) AS QuickManagers FROM df1 GROUP BY name")
+    df1$InsertionRate <- paste(round(df1$InsertionRate, 2), "%", sep = "")
+    df1$Income <- paste(round(df1$Income), "euros", sep = " ")
+    df1$PercentScholar <- paste(round(df1$PercentScholar, 2), "%", sep = " ")
+    df1 <- df1[ , !(names(df1) %in% "name")]
+    df1 <- df1[ , !(names(df1) %in% "Freq")]
+    table(df1)
+  })
   
   output$recapTable2 <- DT::renderDataTable({
     df2 <- cleanTable %>%

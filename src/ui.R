@@ -33,7 +33,7 @@ navbarPage("Insertion", id="nav",
            
            tabPanel("Ranking",
                     fluidRow(
-                      column(3,
+                      column(3, offset = 1,
                              selectInput("d_scale", label = "Choose scale", choices  = list("Academy", "University"), selected = "University"),
                              selectInput("d_criteria", label = "Choose a criteria for the ranking", choices  = list("Average income", "Insertion rate", "Quick managers"), selected = "Average income")
                       )
@@ -82,19 +82,20 @@ navbarPage("Insertion", id="nav",
                     ),
                     fluidRow(
                       hr(),
-                      column(6,
+                      column(6, offset = 1,
                              selectInput("university", label = "Choose a university", choices  = utf8decode(universities$name), selected = utf8decode(universities$name[1]))
                       ),
-                      column(6,
+                      column(6, offset = 1,
+                             textOutput("grade"),
                              br(),
-                             br(),
-                             textOutput("grade")
+                             tableOutput("recapTable1")
                              )
                     ),
                     fluidRow(
                           conditionalPanel(condition = "input.university",
                             fluidRow(
-                              column(10,
+                              column(10, offset = 1,
+                                     br(),
                                      h4("List of masters: "),
                                      hr(),
                                      DT::dataTableOutput("recapTable2")
