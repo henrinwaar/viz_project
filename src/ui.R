@@ -76,12 +76,16 @@ navbarPage("Insertion", id="nav",
                     )
            ),
            
-           tabPanel("Universities' info",
+           tabPanel("Universities' grades",
                     fluidRow(
+                      br(),
+                      br(),
                       plotlyOutput("plot2")
-                    ),
+                    )
+           ),
+           
+           tabPanel("Universities' info",        
                     fluidRow(
-                      hr(),
                       column(6, offset = 1,
                              selectInput("university", label = "Choose a university", choices  = utf8decode(universities$name), selected = utf8decode(universities$name[1]))
                       ),
@@ -89,22 +93,22 @@ navbarPage("Insertion", id="nav",
                              textOutput("grade"),
                              br(),
                              tableOutput("recapTable1")
-                             )
+                      )
                     ),
                     fluidRow(
-                          conditionalPanel(condition = "input.university",
-                            fluidRow(
-                              column(10, offset = 1,
-                                     br(),
-                                     h4("List of masters: "),
-                                     hr(),
-                                     DT::dataTableOutput("recapTable2")
-                              )
-                            )
-                          )
+                      conditionalPanel(condition = "input.university",
+                                       fluidRow(
+                                         column(10, offset = 1,
+                                                br(),
+                                                h4("List of masters: "),
+                                                hr(),
+                                                DT::dataTableOutput("recapTable2")
+                                         )
+                                       )
                       )
                     )
            )
+)
 
 
 

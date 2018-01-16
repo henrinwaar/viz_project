@@ -55,7 +55,7 @@ function(input, output) {
   tableManaUni$x <- factor(tableManaUni$x, levels = universitiesRankedByManag$name);
   
   plotManaUni <- plot_ly(tableManaUni, x = ~x, y = ~y, type = 'bar') %>%
-    layout(yaxis = list(title = 'Number of quick managers'), xaxis = list(title = ""))
+    layout(yaxis = list(title = 'Percentage of quick managers'), xaxis = list(title = ""))
   output$diagramManaUni <- renderPlotly(plotManaUni)
   
   ## Diagram for insertion rate by university
@@ -90,7 +90,7 @@ function(input, output) {
   tableManaAca$x <- factor(tableManaAca$x, levels = academiesRankedByManag$academy);
   
   plotManaAca <- plot_ly(tableManaAca, x = ~x, y = ~y, type = 'bar') %>%
-    layout(yaxis = list(title = 'Number of quick managers'), xaxis = list(title = ""))
+    layout(yaxis = list(title = 'Percentage of quick managers'), xaxis = list(title = ""))
   output$diagramManaAca <- renderPlotly(plotManaAca)
   
   ## Diagram for insertion rate by academy
