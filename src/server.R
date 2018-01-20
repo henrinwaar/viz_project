@@ -50,21 +50,22 @@ function(input, output) {
     layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
   output$diagramIncUni <- renderPlotly(plotIncUni)
   
-  ## Diagram for managers by university
-  tableManaUni <- data.frame(x = universitiesRankedByManag$name, y = universitiesRankedByManag$managerNum);
-  tableManaUni$x <- factor(tableManaUni$x, levels = universitiesRankedByManag$name);
-  
-  plotManaUni <- plot_ly(tableManaUni, x = ~x, y = ~y, type = 'bar') %>%
-    layout(yaxis = list(title = 'Percentage of quick managers'), xaxis = list(title = ""))
-  output$diagramManaUni <- renderPlotly(plotManaUni)
-  
   ## Diagram for insertion rate by university
   tableIRUni <- data.frame(x = universitiesRankedByIR$name, y = universitiesRankedByIR$insertionRate);
   tableIRUni$x <- factor(tableIRUni$x, levels = universitiesRankedByIR$name);
   
-  plotIRUni <- plot_ly(tableIRUni, x = ~x, y = ~y, type = 'bar') %>%
+  plotIRUni <- plot_ly(tableIRUni, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
     layout(yaxis = list(title = 'Insertion rate (%)'), xaxis = list(title = ""))
   output$diagramIRUni <- renderPlotly(plotIRUni)
+  
+  ## Diagram for managers by university
+  tableManaUni <- data.frame(x = universitiesRankedByManag$name, y = universitiesRankedByManag$managerNum);
+  tableManaUni$x <- factor(tableManaUni$x, levels = universitiesRankedByManag$name);
+  
+  plotManaUni <- plot_ly(tableManaUni, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
+    layout(yaxis = list(title = 'Percentage of quick managers'), xaxis = list(title = ""))
+  output$diagramManaUni <- renderPlotly(plotManaUni)
+  
   
   ## Diagram for income by university
   tableIncUni <- data.frame(x = universitiesRankedByInc$name, y = universitiesRankedByInc$income);
@@ -80,7 +81,7 @@ function(input, output) {
   tableIncAca <- data.frame(x = academiesRankedByInc$academy, y = academiesRankedByInc$income);
   tableIncAca$x <- factor(tableIncAca$x, levels = academiesRankedByInc$academy);
   
-  plotIncAca <- plot_ly(tableIncAca, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
+  plotIncAca <- plot_ly(tableIncAca, x = ~x, y = ~y, type = 'bar', name = 'Academy') %>%
     add_trace(y = academiesRankedByInc$incomeReg, name = 'Region', opacity = 0.5) %>%
     layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
   output$diagramIncAca <- renderPlotly(plotIncAca)
@@ -89,7 +90,7 @@ function(input, output) {
   tableManaAca <- data.frame(x = academiesRankedByManag$academy, y = academiesRankedByManag$managerNum);
   tableManaAca$x <- factor(tableManaAca$x, levels = academiesRankedByManag$academy);
   
-  plotManaAca <- plot_ly(tableManaAca, x = ~x, y = ~y, type = 'bar') %>%
+  plotManaAca <- plot_ly(tableManaAca, x = ~x, y = ~y, type = 'bar', name = 'Academy') %>%
     layout(yaxis = list(title = 'Percentage of quick managers'), xaxis = list(title = ""))
   output$diagramManaAca <- renderPlotly(plotManaAca)
   
@@ -97,7 +98,7 @@ function(input, output) {
   tableIRAca <- data.frame(x = academiesRankedByIR$academy, y = academiesRankedByIR$insertionRate);
   tableIRAca$x <- factor(tableIRAca$x, levels = academiesRankedByIR$academy);
   
-  plotIRAca <- plot_ly(tableIRAca, x = ~x, y = ~y, type = 'bar') %>%
+  plotIRAca <- plot_ly(tableIRAca, x = ~x, y = ~y, type = 'bar', name = 'Academy') %>%
     layout(yaxis = list(title = 'Insertion rate (%)'), xaxis = list(title = ""))
   output$diagramIRAca <- renderPlotly(plotIRAca)
   
@@ -138,10 +139,11 @@ function(input, output) {
       filter(
         name == input$university
       )
-    df1 <- sqldf::sqldf("SELECT name, SUM(population) AS Population, SUM(womenNum) AS Women, AVG(insertionRate) AS InsertionRate, AVG(income) AS Income, AVG(scholarPer) AS PercentScholar, SUM(managerNum) AS QuickManagers FROM df1 GROUP BY name")
+    df1 <- sqldf::sqldf("SELECT name, SUM(population) AS Population, SUM(womenNum) AS Women, AVG(insertionRate) AS InsertionRate, AVG(income) AS Income, AVG(scholarPer) AS PercentScholar, (SUM(managerNum)/SUM(population)) AS QuickManagers FROM df1 GROUP BY name")
     df1$InsertionRate <- paste(round(df1$InsertionRate, 2), "%", sep = "")
     df1$Income <- paste(round(df1$Income), "euros", sep = " ")
     df1$PercentScholar <- paste(round(df1$PercentScholar, 2), "%", sep = " ")
+    df1$QuickManagers <- paste(round(df1$QuickManagers * 100, 2), "%", sep = " ")
     df1 <- df1[ , !(names(df1) %in% "name")]
     df1 <- df1[ , !(names(df1) %in% "Freq")]
     table(df1)
@@ -152,10 +154,11 @@ function(input, output) {
       filter(
         name == input$university
       )
-    df2 <- sqldf::sqldf("SELECT Field, SUM(population) AS Population, SUM(womenNum) AS Women, AVG(insertionRate) AS InsertionRate, AVG(income) AS Income, AVG(scholarPer) AS PercentScholar, SUM(managerNum) AS QuickManagers FROM df2 GROUP BY field")
+    df2 <- sqldf::sqldf("SELECT Field, SUM(population) AS Population, SUM(womenNum) AS Women, AVG(insertionRate) AS InsertionRate, AVG(income) AS Income, AVG(scholarPer) AS PercentScholar, (SUM(managerNum)/SUM(population)) AS QuickManagers FROM df2 GROUP BY field")
     df2$InsertionRate <- paste(round(df2$InsertionRate, 2), "%", sep = "")
     df2$Income <- paste(round(df2$Income), "euros", sep = " ")
     df2$PercentScholar <- paste(round(df2$PercentScholar, 2), "%", sep = " ")
+    df2$QuickManagers <- paste(round(df2$QuickManagers * 100, 2), "%", sep = " ")
     DT::datatable(df2, escape = FALSE)
   })
 }

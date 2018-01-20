@@ -5,7 +5,7 @@ source("helpers.R")
 
 # Choices for drop-downs
 
-navbarPage("Insertion", id="nav",
+navbarPage("Insertion Master", id="nav",
            
            tabPanel("Interactive map",
                     div(class="outer",
@@ -76,7 +76,7 @@ navbarPage("Insertion", id="nav",
                     )
            ),
            
-           tabPanel("Universities' grades",
+           tabPanel("University grades",
                     fluidRow(
                       br(),
                       br(),
@@ -84,7 +84,7 @@ navbarPage("Insertion", id="nav",
                     )
            ),
            
-           tabPanel("Universities' info",        
+           tabPanel("University info",        
                     fluidRow(
                       column(6, offset = 1,
                              selectInput("university", label = "Choose a university", choices  = utf8decode(universities$name), selected = utf8decode(universities$name[1]))
