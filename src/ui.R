@@ -100,7 +100,7 @@ navbarPage("Insertion Master", id="nav",
                                        fluidRow(
                                          column(10, offset = 1,
                                                 br(),
-                                                h4("List of masters: "),
+                                                h4("List of the different masters available in the university: "),
                                                 hr(),
                                                 DT::dataTableOutput("recapTable2")
                                          )

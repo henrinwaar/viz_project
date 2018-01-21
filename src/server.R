@@ -22,7 +22,7 @@ function(input, output) {
         addMarkers(lng = universities$Long, 
                    lat = universities$Lat, 
                    label = utf8decode(universities$name), 
-                   popup = paste("Number of masters: ", universities$numberOfMasters, "<br>Number of students: ", universities$population, "<br>Percentage of women: ",  round((universities$womenNum/universities$population)*100,2), "%<br>Average insertion rate: ", universities$insertionRate, "%<br>Average income: ", universities$income, " euros", sep = ""), 
+                   popup = paste("Number of masters: ", universities$numberOfMasters, "<br>Number of students: ", universities$population, "<br>Percentage of women: ",  round((universities$womenNum / universities$population)*100,2), "%<br>Average insertion rate: ", round(universities$insertionRate, 2), "%<br>Average income: ", round(universities$income, 0), " euros", sep = ""), 
                    options = markerOptions(riseOnHover = TRUE), 
                    clusterOptions = markerClusterOptions(spiderfyOnMaxZoom = FALSE)) %>%
         setView(lng = 2.9252801, lat = 47.3824086, zoom = 6) 
@@ -33,7 +33,7 @@ function(input, output) {
         addMarkers(lng = academies$Long, 
                    lat = academies$Lat, 
                    label = utf8decode(academies$academy), 
-                   popup = paste("Number of masters: ", academies$numberOfMasters, "<br>Number of students: ", academies$population, "<br>Percentage of women: ",  round((academies$womenNum/academies$population)*100,2), "<br>Average insertion rate: ", academies$insertionRate, "%<br>Average income: ", academies$income, " euros", sep = ""), 
+                   popup = paste("Number of masters: ", academies$numberOfMasters, "<br>Number of students: ", academies$population, "<br>Percentage of women: ",  round((academies$womenNum/academies$population)*100,2), "<br>Average insertion rate: ", round(academies$insertionRate, 2), "%<br>Average income: ", round(academies$income, 0), " euros", sep = ""), 
                    options = markerOptions(riseOnHover = TRUE), 
                    clusterOptions = markerClusterOptions(spiderfyOnMaxZoom = FALSE)) %>%
         setView(lng = 2.9252801, lat = 47.3824086, zoom = 6) 
@@ -47,7 +47,7 @@ function(input, output) {
   
   plotIncUni <- plot_ly(tableIncUni, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
     add_trace(y = universitiesRankedByInc$incomeReg, name = 'Region', opacity = 0.5) %>%
-    layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
+    layout(yaxis = list(title = 'Average income (euros)', range = c(23000, 32000)), xaxis = list(title = ""), barmode = 'overlay')
   output$diagramIncUni <- renderPlotly(plotIncUni)
   
   ## Diagram for insertion rate by university
@@ -55,7 +55,7 @@ function(input, output) {
   tableIRUni$x <- factor(tableIRUni$x, levels = universitiesRankedByIR$name);
   
   plotIRUni <- plot_ly(tableIRUni, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
-    layout(yaxis = list(title = 'Insertion rate (%)'), xaxis = list(title = ""))
+    layout(yaxis = list(title = 'Insertion rate (%)', range = c(84, 92)), xaxis = list(title = ""))
   output$diagramIRUni <- renderPlotly(plotIRUni)
   
   ## Diagram for managers by university
@@ -67,15 +67,6 @@ function(input, output) {
   output$diagramManaUni <- renderPlotly(plotManaUni)
   
   
-  ## Diagram for income by university
-  tableIncUni <- data.frame(x = universitiesRankedByInc$name, y = universitiesRankedByInc$income);
-  tableIncUni$x <- factor(tableIncUni$x, levels = universitiesRankedByInc$name);
-  
-  plotIncUni <- plot_ly(tableIncUni, x = ~x, y = ~y, type = 'bar', name = 'University') %>%
-    add_trace(y = universitiesRankedByInc$incomeReg, name = 'Region', opacity = 0.5) %>%
-    layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
-  output$diagramIncUni <- renderPlotly(plotIncUni)
-  
   ## Academy ranking barplots ####
   ## Diagram for income by academy
   tableIncAca <- data.frame(x = academiesRankedByInc$academy, y = academiesRankedByInc$income);
@@ -83,7 +74,7 @@ function(input, output) {
   
   plotIncAca <- plot_ly(tableIncAca, x = ~x, y = ~y, type = 'bar', name = 'Academy') %>%
     add_trace(y = academiesRankedByInc$incomeReg, name = 'Region', opacity = 0.5) %>%
-    layout(yaxis = list(title = 'Average income (euros)'), xaxis = list(title = ""), barmode = 'overlay')
+    layout(yaxis = list(title = 'Average income (euros)', range = c(24000, 32000)), xaxis = list(title = ""), barmode = 'overlay')
   output$diagramIncAca <- renderPlotly(plotIncAca)
   
   ## Diagram for managers by academy
@@ -99,7 +90,7 @@ function(input, output) {
   tableIRAca$x <- factor(tableIRAca$x, levels = academiesRankedByIR$academy);
   
   plotIRAca <- plot_ly(tableIRAca, x = ~x, y = ~y, type = 'bar', name = 'Academy') %>%
-    layout(yaxis = list(title = 'Insertion rate (%)'), xaxis = list(title = ""))
+    layout(yaxis = list(title = 'Insertion rate (%)', range = c(84, 92)), xaxis = list(title = ""))
   output$diagramIRAca <- renderPlotly(plotIRAca)
   
   ## Clustering ####
