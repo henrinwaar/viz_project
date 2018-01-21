@@ -39,6 +39,7 @@ cleanTable$field <- utf8decode(cleanTable$field)
 
 universities <- sqldf::sqldf("SELECT name, COUNT(DISTINCT field) AS numberOfMasters, AVG(insertionRate) AS insertionRate, SUM(population) AS population, SUM(womenNum) AS womenNum, (SUM(managerNum)/SUM(population)) AS managerNum, AVG(income) AS income, Lat, Long FROM cleanData Group BY name, Lat, Long")
 academies <- sqldf::sqldf("SELECT academy, COUNT(DISTINCT field) AS numberOfMasters, AVG(insertionRate) AS insertionRate, SUM(population) AS population, SUM(womenNum) AS womenNum, (SUM(managerNum)/SUM(population)) AS managerNum, AVG(income) AS income, AVG(Lat) AS Lat, AVG(Long) AS Long FROM cleanData Group BY academy")
+universities$name <- utf8decode(universities$name)
 
 universitiesRankedByIR <- sqldf::sqldf("SELECT name, COUNT(DISTINCT field) AS numberOfMasters, AVG(insertionRate) AS insertionRate, AVG(100-unemployRateReg) AS unemployRateReg, SUM(population) AS population, SUM(womenNum) AS womenNum, AVG(income) AS income, (incomeReg * 12 * 1.23) AS incomeReg, (SUM(managerNum)/SUM(population)) AS managerNum, Lat, Long FROM cleanData Group BY name, Lat, Long ORDER BY insertionRate DESC")
 universitiesRankedByInc <- sqldf::sqldf("SELECT name, COUNT(DISTINCT field) AS numberOfMasters, AVG(insertionRate) AS insertionRate, SUM(population) AS population, SUM(womenNum) AS womenNum,AVG(income) AS income, (incomeReg * 12 * 1.23) AS incomeReg, (SUM(managerNum)/SUM(population)) AS managerNum, Lat, Long FROM cleanData Group BY name, Lat, Long ORDER BY income DESC")
